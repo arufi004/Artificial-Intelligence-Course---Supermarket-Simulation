@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transaction History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Transaction History</h1>
+        <p>Total transactions: {{ transactions|length }}</p>
+
+        <div class="transaction-list">
+            {% for transaction in transactions %}
+            <div class="transaction">
+                <h3>Transaction {{ loop.index }}</h3>  <!-- Use loop.index instead of enumerate -->
+                <ul>
+                    {% for item in transaction %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="controls">
+            <button onclick="location.href='/'">Back to Shopping</button>
+            {% if transactions|length >= 5 %}
+            <button onclick="location.href='/analyze'">Analyze Data</button>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

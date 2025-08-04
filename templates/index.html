@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supermarket Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Supermarket Simulation</h1>
+        <p>Select items to add to your transaction:</p>
+
+        <form method="POST" action="/add_transaction">
+            <div class="items-grid">
+                {% for item in items %}
+                <label class="item-card">
+                    <input type="checkbox" name="items" value="{{ item }}">
+                    <span>{{ item }}</span>
+                </label>
+                {% endfor %}
+            </div>
+
+            <div class="controls">
+                <button type="submit">Add Transaction</button>
+                <button type="button" onclick="location.href='/view_transactions'">View Transactions</button>
+                {% if transaction_count >= 5 %}
+                <button type="button" onclick="location.href='/analyze'">Analyze Data</button>
+                {% endif %}
+            </div>
+        </form>
+
+        <div class="status">
+            <p>Total transactions created: {{ transaction_count }}</p>
+            {% if transaction_count < 5 and transaction_count > 0 %}
+            <p class="warning">You need at least 5 transactions to analyze data.</p>
+            {% elif transaction_count >= 30 %}
+            <p class="success">Great! You have enough data for meaningful analysis.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

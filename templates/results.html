@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Data Mining Results</h1>
+        <p>Based on {{ transaction_count }} transactions</p>
+
+        <div class="results-section">
+            <h2>Customer Clusters (K-means)</h2>
+            <p>{{ kmeans_results.interpretation }}</p>
+
+            <div class="cluster-results">
+                <h3>Cluster Distribution</h3>
+                <ul>
+                    {% for cluster, count in kmeans_results.cluster_distribution.items() %}
+                    <li>{{ cluster }}: {{ count }} customers ({{ (count/transaction_count*100)|round(1) }}%)</li>
+                    {% endfor %}
+                </ul>
+
+                <h3>Cluster Characteristics</h3>
+                {% for cluster, details in kmeans_results.cluster_details.items() %}
+                <div class="cluster-card">
+                    <h4>{{ cluster }}</h4>
+                    <p><strong>Size:</strong> {{ details.size }} customers</p>
+                    <p><strong>Top Items:</strong></p>
+                    <ul>
+                        {% for item, freq in details.top_items %}
+                        <li>{{ item }} ({{ freq }}% of customers)</li>
+                        {% endfor %}
+                    </ul>
+                    <p><strong>Description:</strong> {{ details.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2>Association Rules (Apriori)</h2>
+            <p>{{ apriori_results.interpretation }}</p>
+
+            {% if apriori_results.rules %}
+            <table>
+                <tr>
+                    <th>Rule</th>
+                    <th>Confidence</th>
+                    <th>Support</th>
+                    <th>Lift</th>
+                </tr>
+                {% for rule in apriori_results.rules %}
+                <tr>
+                    <td>{{ rule.rule }}</td>
+                    <td>{{ rule.confidence }}%</td>
+                    <td>{{ rule.support }}%</td>
+                    <td>{{ rule.lift }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <p>No significant association rules found.</p>
+            {% endif %}
+        </div>
+
+        <div class="controls">
+            <button onclick="location.href='/'">Back to Shopping</button>
+            <button onclick="location.href='/view_transactions'">View Transactions</button>
+        </div>
+    </div>
+</body>
+</html>
